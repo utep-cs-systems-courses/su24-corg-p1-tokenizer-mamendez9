@@ -1,0 +1,96 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "history.h"
+#include "tokenizer.h"
+
+/* Initialize the linked list to keep the history. */
+List* init_history()
+{
+  List *head_ptr = malloc(sizeof(List));
+  head_ptr->head = 0;
+  return head_ptr;
+}
+
+/* Add a history item to the end of the list.
+   List* list - the linked list
+   char* str - the string to store
+*/
+void add_history(List *list, char *str)
+{
+  if(list->head == 0)
+    {
+      Item *new_node = malloc(sizeof(Item));
+      int str_len = string_length_full(str);
+      new_node->str = copy_str(str, str_len);
+      new_node->next = 0;
+      list->head = new_node;
+    }
+  else
+    {
+      Item *current_item = list->head;
+      while (current_item->next != 0)
+	{
+	  current_item = current_item->next;
+	}
+      
+    }
+}
+/* Retrieve the string stored in the node where Item->id == id.
+   List* list - the linked list
+   int id - the id of the Item to find */
+char *get_history(List *list, int id)
+{
+  int count = 1;
+  if (list->head == 0)
+    {
+      return "No History \n";
+    }
+  Item *current_item = list->head;
+  while (current_item->next != 0 && count != id)
+    {
+      current_item = current_item->next;
+      count++;
+    }
+  if (count == id)
+    {
+      return current_item->str;
+    }
+  return "No history for that item";
+}
+
+/*Print the entire contents of the list. */
+void print_history(List *list)
+{
+  int count = 1;
+  if (list->head == 0)
+    {
+      printf("No History \n");
+    }
+    else
+      {
+	Item *current_item = list->head;
+	printf("%d. %s", count, current_item->str);
+	while (current_item->next != 0)
+	  {
+	    current_item = current_item->next;
+	    count++;
+	    printf("%d. %s", count, current_item->str);
+	  }
+      }
+}
+
+/*Free the history list and the strings it references. */
+void free_history(List *list)
+{
+  Item *current_item = list->head;
+  Item *next;
+
+  while (current_item != 0)
+    {
+      next = current_item->next;
+      free(current_item->str);
+      free(current_item);
+      current_item = next;
+    }
+  free(list);
+}

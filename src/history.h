@@ -8,7 +8,7 @@ typedef struct s_Item {
 } Item;
 
 typedef struct s_List {
-  struct s_Item *root;
+  struct s_Item *head;
 } List;
 
 /* Initialize the linked list to keep the history. */

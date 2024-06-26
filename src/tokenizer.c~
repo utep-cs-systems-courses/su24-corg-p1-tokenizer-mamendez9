@@ -1,0 +1,179 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "tokenizer.h"
+
+/* Return true (non-zero) if c is a whitespace characer
+   ('\t' or ' ').  
+   Zero terminators are not printable (therefore false) */
+int space_char (char c)
+{
+  return (c == ' ' || c == '\t');
+} 
+
+/* Return true (non-zero) if c is a ç non-whitespace 
+   character (not tab or space).  
+   Zero terminators are not printable (therefore false) */ 
+int non_space_char (char c)
+{
+  return (c != ' ' && c != '\t' && c != '\0');
+}
+/* Returns a pointer to the first character of the next 
+   space-separated token in zero-terminated str.  Return a zero pointer if 
+   str does not contain any tokens. */
+char *token_start (char *str)
+{
+  /*finds the start of the first token  by skipping the leading spaces */
+  while (*str != '\0' && space_char(*str)) {
+    str++;
+  }
+  /* return a pointer to the first non-space character,
+     or 0 if no tokens are found */
+  return (*str == '\0') ? 0 : str;
+}
+
+/* Returns a pointer terminator char following *token */
+char *token_terminator (char *token)
+{
+  /*finds the end of the token starting at the given pointer */
+  while(*token != '\0' && non_space_char(*token))
+    {
+      /*increments until a space is found */
+      token++;
+    }
+  return token;
+}
+
+/* Counts the number of tokens in the string argument. */
+int count_tokens (char *str)
+{
+  int count = 0;
+  while (*str != '\0' && token_start(str) != 0)
+    {
+      /* We use token start and teminator to find the end of each token */
+      str = token_start(str);
+      str = token_terminator(str);
+      /* Then increment it by 1 */
+      count++;
+    }
+  return count;
+}
+   
+/* Returns a fresly allocated new zero-terminated string 
+   containing <len> chars from <inStr> */
+char *copy_str (char *inStr, short len)
+{
+  char *str = malloc((len + 1) * sizeof(char));
+  char *strp = str;
+
+  /*Iterates over the legth of the string updating the malloc values */
+  for (int i = 0; i < len; i++)
+    {
+      *strp++ = *inStr++;
+    }
+  *strp = 0;
+  return str;
+}
+
+/* Returns a freshly allocated zero-terminated vector of freshly allocated 
+   space-separated tokens from zero-terminated str.
+
+   For example, tokenize("hello world string") would result in:
+     tokens[0] = "hello"
+     tokens[1] = "world"
+     tokens[2] = "string" 
+     tokens[3] = 0
+*/
+char **tokenize (char* str)
+{
+  int num_tokens = count_tokens(str);
+  char **token_final = malloc((num_tokens + 1) * sizeof(char *));
+  char **token_ptr = token_final;
+
+  for (int i = 0; i < num_tokens; i++)
+    {
+      /* first find the start of the next token,
+	 then find the tokens length,
+	 and finally copy the token */
+      str = token_start(str);
+      int length = string_length(str);
+      char *copy_ptr = copy_str(str, length);
+
+      /* assigne the index to the pointer copy,
+	 find the terminator of the current token */
+      token_ptr[i] = copy_ptr;
+      str = token_terminator(str);
+      token_ptr[num_tokens] = 0;
+      return token_final;
+      
+    } 
+  
+  if (str == 0)
+    {
+      return 0;
+    }
+
+  char **tokens = (char **)malloc((num_tokens + 1) * sizeof(char *));
+  
+  if (tokens == 0)
+    {
+      return 0;
+    }
+  
+  int token_index = 0;
+  char *start = token_start(str);
+
+  while (start != 0)
+    {
+      char *end = token_terminator(start);
+      int token_length = end - start;
+      tokens[token_index] = copy_str(start, token_length);
+      
+    }
+  tokens[token_index] = 0;
+  return tokens;
+}
+/* Prints all tokens. */
+void print_tokens (char **tokens)
+{
+  if (tokens == 0)
+    {
+      printf("No tokens");
+      return;
+    }
+  for (int i = 0; tokens[i] != 0; i++)
+    {
+      printf("tokens[%d] =  %s/n", i, tokens[i]);
+    }
+}
+
+/* Frees all tokens and the vector containing themx. */
+void free_tokens (char **tokens)
+{
+  int i = 0;
+  while(tokens[i] != 0)
+    {
+      free(tokens[i]);
+      i++;
+    }
+     /* Free the null terminated space,
+        then free the vector */
+     free(tokens[i]);
+     free(tokens);
+}
+
+int string_length(char *str)
+{
+    char *p = str;
+    p = token_terminator(p);
+    return p - str;
+}
+
+int string_length_full (char *str)
+{
+  int count = 0;
+  while (*str++ != 0)
+    {
+      count ++;
+    }
+  return count;
+}
