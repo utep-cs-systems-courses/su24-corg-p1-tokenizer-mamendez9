@@ -59,11 +59,11 @@ int main(int argc, char **argv)
 	   break;
 	 }
      }
+
  history:
-   //putchar('\n');
    printf("Choose an option:\n");
    printf("a = Show all History\n");
-   printf("!<number> = Specific History Item\n");
+   //printf("!<number> = Specific History Item\n");
    printf("c = Clear History\n");
    printf("m = Main Menu\n");
    printf("q = Quit\n");

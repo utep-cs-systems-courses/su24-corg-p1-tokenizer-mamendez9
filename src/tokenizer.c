@@ -103,13 +103,12 @@ char **tokenize (char* str)
       /* assigned the index to the pointer copy,
 	 find the terminator of the current token */
       token_ptr[i] = copy_ptr;
-    }
       str = token_terminator(str);
-      token_ptr[num_tokens] = 0;
-      return final_token;
-      
-     
-  
+    }
+  token_ptr[num_tokens] = 0;
+  return final_token;    
+}
+/*  
   if (str == 0)
     {
       return 0;
@@ -134,7 +133,8 @@ char **tokenize (char* str)
     }
   tokens[token_index] = 0;
   return tokens;
-}
+  } */
+  
 /* Prints all tokens. */
 void print_tokens (char **tokens)
 {
@@ -143,9 +143,15 @@ void print_tokens (char **tokens)
       printf("No tokens");
       return;
     }
-  for (int i = 0; tokens[i] != 0; i++)
+  /*for (int i = 0; tokens[i] != 0; i++)
     {
       printf("tokens[%d] =  %s/n", i, tokens[i]);
+      } */
+  int i = 0;
+  while (tokens[i] != 0)
+    {
+      printf("tokens[%d] = %s\n", i, tokens[i]);
+      i++;
     }
 }
 

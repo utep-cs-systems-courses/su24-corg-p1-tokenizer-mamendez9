@@ -33,6 +33,11 @@ void add_history(List *list, char *str)
 	  current_item = current_item->next;
 	}
       
+      Item *new_node = malloc(sizeof(Item));
+      int str_len = string_length_full(str);
+      new_node->str = copy_str(str, str_len);
+      new_node->next = 0;
+      current_item->next = new_node;
     }
 }
 /* Retrieve the string stored in the node where Item->id == id.
